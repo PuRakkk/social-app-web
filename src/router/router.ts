@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import helloworld from '@/views/helloworld.vue';
+import signin from '@/views/signin.vue';
+import Login from '@/views/login.vue';
 
 const routerHistory = createWebHistory();
 
@@ -7,10 +8,16 @@ const router = createRouter({
   history: routerHistory,
   routes: [
     {
-      path: '/helloworld',
-      name: 'helloworld',
-      component: helloworld,
-      meta: { title: "Hello World" },
+      path: '/',
+      name: 'sigin',
+      component: signin,
+      meta: { title: "Signin" },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: { title: "Login" },
     },
   ], 
 });
