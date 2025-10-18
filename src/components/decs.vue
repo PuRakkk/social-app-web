@@ -1,6 +1,5 @@
 <template>
-    <div class="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 w-3/4 h-3/4">
-        <div></div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg px-6 py-28 ring shadow-xl ring-gray-900/5 w-3/4 h-3/4">
         <h1 class="text-teal-400 dark:text-teal-400 mt-5 font-medium tracking-tight font-mono text-2xl">
             {{ Welcome }}
             <span class="animate-blinkCaret border-r-2 border-gray-900 dark:border-white"></span>

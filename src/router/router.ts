@@ -24,7 +24,7 @@ const router = createRouter({
 
 // Global Navigation Guard
 router.beforeEach((to, _from, next) => {
-  document.title = `social-app ${to.meta.title || ''}`;
+  document.title = `QuixShare ${to.meta.title || ''}`;
   next();
 });
 
