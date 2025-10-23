@@ -22,7 +22,7 @@ import { ref, onMounted } from 'vue';
 const isDesktop = ref(false)
 
 const checkScreen = () => {
-    isDesktop.value = window.innerWidth >= 1200
+    isDesktop.value = window.innerWidth >= 1080
 }
 
 onMounted(() =>{
