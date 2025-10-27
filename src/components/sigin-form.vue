@@ -18,10 +18,10 @@
                 <span class="text-sm text-gray-400 dark:text-gray-500">or {{ register_or_login }} with email</span>
             </div>
 
-            <form @submit.prevent class="space-y-4">
+            <form @submit.prevent="handleSubmit" class="space-y-4">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input id="email" type="email" required
+                    <input v-model="email" id="email" type="email" required
                         class="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-600 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm"
                         placeholder="Enter your email">
                 </div>
@@ -29,9 +29,9 @@
                 <div class="relative">
                     <label for="password"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                    <input id="password" :type="show ? 'text' : 'password'" required
+                    <input v-model="password" id="password" :type="show ? 'text' : 'password'" required
                         class="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-600 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm viewBox="
-                        placeholder="Enter your password"/>
+                        placeholder="Enter your password" />
                     <span
                         class="absolute right-3 top-1/2 cursor-pointer text-gray-300 hover:text-white flex item=center justify-center"
                         @click="show = !show">
@@ -53,11 +53,33 @@
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                        {{ register_or_login }}
+                    <button type="submit" :disabled="loading"
+                        class="w-full h-10 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                        <span v-if="loading" class="flex items-center gap-2">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                                </path>
+                            </svg>
+                            <span></span>
+                        </span>
+
+                        <span v-else>{{ register_or_login }}</span>
                     </button>
                 </div>
+
+                <transition name="fade">
+                    <p v-show="true" class="text-center text-sm mt-2 min-h-[1.5rem]" :class="{
+                        'text-green-400': message.includes('Successfull'),
+                        'text-rose-400': message.includes('wrong') || message.includes('Invalid') || message.includes('already'),
+                        'text-transparent': message === '',
+                    }">
+                        {{ message || '' }}
+                    </p>
+                </transition>
+
 
                 <p class="text-center text-sm text-gray-600 dark:text-gray-400 pt-2">
                     {{ status }}
@@ -72,16 +94,55 @@
 </template>
 
 <script setup lang="ts">
+import api from '@/plugins/axios'
+import router from '@/router/router'
 import { ref } from 'vue'
 
-
 const show = ref(false)
-defineProps<{
+const email = ref("")
+const password = ref("")
+const loading = ref(false)
+const message = ref("")
+
+
+const props = defineProps<{
     register_or_login: string
     login_or_signin: string
     status: string
     old_or_new_user: string | null
 }>()
 
+
+const handleSubmit = async () => {
+    loading.value = true
+    message.value = ""
+
+    try {
+        if (props.register_or_login == "Register"){
+            const response = await api.post("/auth/register", {
+            email: email.value,
+            password: password.value,
+            quix_share_user_profile: {
+
+                }
+            })
+            console.log("Response:", response.data)
+            if (response.status === 201) {
+            message.value = response.data.message
+
+            setTimeout(() => {
+                router.push('/login')
+            }, 1000)
+        }
+    } catch (error: any) {
+        console.error("API Error:", error)
+        
+        message.value = ((error.response?.data?.email as string[]).join() || "Something went wrong")
+    } finally {
+        loading.value = false
+        
+    }
+
+}
 
 </script>

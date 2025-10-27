@@ -18,9 +18,7 @@ import siginForm from '@/components/sigin-form.vue';
 import decs from '@/components/decs.vue';
 import { ref, onMounted } from 'vue';
 
-
 const isDesktop = ref(false)
-
 const checkScreen = () => {
     isDesktop.value = window.innerWidth >= 1080
 }
