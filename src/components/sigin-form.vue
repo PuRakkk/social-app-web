@@ -71,9 +71,9 @@
                 </div>
 
                 <transition name="fade">
-                    <p v-show="true" class="text-center text-sm mt-2 min-h-[1.5rem]" :class="{
+                    <p v-show="true" class="text-center text-xs mt-2 min-h-[1.5rem]" :class="{
                         'text-green-400': message.includes('Successfull'),
-                        'text-rose-400': message.includes('wrong') || message.includes('Invalid') || message.includes('already'),
+                        'text-rose-400': message.includes('wrong') || message.includes('Invalid') || message.includes('Password') || message.includes('already'),
                         'text-transparent': message === '',
                     }">
                         {{ message || '' }}
@@ -126,18 +126,17 @@ const handleSubmit = async () => {
 
                 }
             })
-            console.log("Response:", response.data)
+            console.log("Response:", response.status)
             if (response.status === 201) {
             message.value = response.data.message
 
             setTimeout(() => {
                 router.push('/login')
-            }, 1000)
+            }, 1500)
         }
+    }
     } catch (error: any) {
-        console.error("API Error:", error)
-        
-        message.value = ((error.response?.data?.email as string[]).join() || "Something went wrong")
+        message.value = (error.response?.data?.email || error.response?.data?.password || "Something went wrong")
     } finally {
         loading.value = false
         
